@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import axios from 'axios';
 
 function SocialMediaApp() {
   const [posts, setPosts] = useState([]);
   const [newPostText, setNewPostText] = useState('');
   const [newCommentText, setNewCommentText] = useState(''); // State for new comment text
+
+  useEffect(()=>{
+    axios.get("http://localhost:3000/getallposts")
+    .then(res=>{
+      console.log(res)
+      // setPosts(posts)
+    })
+  }, [])
 
   const handleNewPostChange = (event) => {
     setNewPostText(event.target.value);
