@@ -8,10 +8,10 @@ function SocialMediaApp() {
   const [newCommentText, setNewCommentText] = useState(''); // State for new comment text
 
   useEffect(()=>{
-    axios.get("http://localhost:3000/getallposts")
+    axios.get("http://localhost:3001/getallposts")
     .then(res=>{
       console.log(res)
-      // setPosts(posts)
+      setPosts(res.data)
     })
   }, [])
 
@@ -22,14 +22,19 @@ function SocialMediaApp() {
   const handleNewPostSubmit = () => {
     if (newPostText.trim() !== '') {
       const newPost = {
-        id: Date.now(),
-        text: newPostText,
+        user: "0x984651bf57d215",
+        post: newPostText,
         likes: 0,
         dislikes: 0,
-        liked: false,
-        disliked: false,
         comments: []
       };
+      axios.post("http://localhost:3001/createpost", newPost)
+      .then(res=>{
+        console.log("Uploaded Content!")
+      })
+      .catch(err=>{
+        console.log("Error Uploading: ", err)
+      })
       setPosts([...posts, newPost]);
       setNewPostText('');
     }
@@ -82,8 +87,8 @@ function SocialMediaApp() {
       </div>
       <div>
         {posts.map(post => (
-          <div key={post.id} className="post">
-            <p>{post.text}</p>
+          <div key={post.user} className="post">
+            <p>{post.post}</p>
             <button onClick={() => handleLike(post.id)} className={`like-button ${post.liked ? 'disabled' : ''}`} disabled={post.liked}>Like ({post.likes})</button>
             <button onClick={() => handleDislike(post.id)} className={`dislike-button ${post.disliked ? 'disabled' : ''}`} disabled={post.disliked}>Dislike ({post.dislikes})</button>
             <div>
